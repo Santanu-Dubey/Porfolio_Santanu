@@ -52,8 +52,8 @@ export function About() {
               <div className="w-full h-full rounded-full overflow-hidden p-3 select-none">
                 <img
                   src={PROFILE.about.photo}
-                  alt="Santanu Dubey profile placeholder"
-                  className="w-full h-full object-cover rounded-full filter grayscale contrast-110"
+                  alt="Santanu Dubey"
+                  className="w-full h-full object-cover rounded-full object-[center_28%] transition-transform duration-700 hover:scale-105"
                 />
               </div>
 

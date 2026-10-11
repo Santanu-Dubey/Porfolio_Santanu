@@ -33,7 +33,7 @@ export const PROFILE = {
         status: 'Schooling',
       },
     ],
-    photo: '/photo-placeholder.webp',
+    photo: '/santanu-portrait.png',
   },
   links: {
     github: 'https://github.com/Santanu-Dubey',
