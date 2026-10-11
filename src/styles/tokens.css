@@ -1,0 +1,52 @@
+:root {
+  /* Default Ink Theme */
+  --paper: #F8F4EA;
+  --paper-rgb: 248, 244, 234;
+  --ink: #111111;
+  --ink-rgb: 17, 17, 17;
+  --ink-muted: #3D3D3D;
+  --ink-faint: rgba(17, 17, 17, 0.07);
+  --ink-subtle: rgba(17, 17, 17, 0.15);
+
+  --indigo: #1D3C9C;
+  --indigo-rgb: 29, 60, 156;
+  --green: #3F8A1F;
+  --green-rgb: 63, 138, 31;
+  --marigold: #FF9F1C;
+
+  --vignette-indigo: rgba(29, 60, 156, 0.15);
+  --vignette-green: rgba(63, 138, 31, 0.12);
+
+  /* Fluid typography */
+  --font-display: clamp(2.75rem, 6vw + 1rem, 5.25rem);
+  --font-title: clamp(2rem, 4vw + 0.5rem, 3.5rem);
+  --font-subtitle: clamp(1.25rem, 2vw + 0.25rem, 1.85rem);
+  --font-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 16px to 18px */
+  --font-caption: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+
+  /* Spacing */
+  --max-ch: 72ch;
+  --container-pad: clamp(1.25rem, 4vw, 4rem);
+
+  /* Transitions */
+  --theme-transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                      color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="indigo-green"] {
+  --paper: #F5F1E5;
+  --paper-rgb: 245, 241, 229;
+  --ink: #10266B;
+  --ink-rgb: 16, 38, 107;
+  --ink-muted: #23522A;
+  --ink-faint: rgba(29, 60, 156, 0.1);
+  --ink-subtle: rgba(29, 60, 156, 0.2);
+
+  --indigo: #1D3C9C;
+  --green: #3F8A1F;
+  --marigold: #E68A00;
+
+  --vignette-indigo: rgba(29, 60, 156, 0.28);
+  --vignette-green: rgba(63, 138, 31, 0.24);
+}

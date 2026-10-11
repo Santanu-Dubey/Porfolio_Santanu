@@ -1,0 +1,51 @@
+@import './tokens.css';
+@import './art.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: auto; /* Managed by Lenis */
+    background-color: var(--paper);
+    color: var(--ink);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  a, button {
+    cursor: pointer;
+  }
+
+  /* Accessible focus styling with fine-line ink loop */
+  :focus-visible {
+    outline: 2px dashed var(--indigo);
+    outline-offset: 4px;
+  }
+}

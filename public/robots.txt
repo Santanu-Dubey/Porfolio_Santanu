@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://santanu-dubey.github.io/sitemap.xml
