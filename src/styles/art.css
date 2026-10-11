@@ -91,6 +91,10 @@
   animation: spinSlow 90s linear infinite;
 }
 
+.spin-halo {
+  animation: spinSlow 45s linear infinite;
+}
+
 .spin-reverse-slow {
   animation: spinSlow 120s linear infinite reverse;
 }

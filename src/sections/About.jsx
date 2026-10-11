@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PROFILE } from '../data/profile';
 import { Reveal } from '../components/ui/Reveal';
+import { GoldenHaloMandala } from '../components/art/GoldenHaloMandala';
 import { GraduationCap, MapPin, Calendar } from 'lucide-react';
 
 export function About() {
@@ -28,32 +29,32 @@ export function About() {
           {/* Round Mandala Photo Slot */}
           <div className="lg:col-span-5 flex flex-col items-center lg:sticky lg:top-24">
             <Reveal delay={0.2} className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[390px] lg:h-[390px] xl:w-[420px] xl:h-[420px]">
-              {/* Radial mandala border rings */}
+              {/* Outer clean circular frame - blue circle and dotted circle removed */}
               <svg
-                className="absolute inset-0 w-full h-full stroke-pen pointer-events-none z-10 spin-slow"
+                className="absolute inset-0 w-full h-full stroke-pen pointer-events-none z-20"
                 viewBox="0 0 100 100"
                 fill="none"
               >
-                <circle cx="50" cy="50" r="48" strokeWidth="1.5" />
-                <circle cx="50" cy="50" r="44" strokeWidth="0.8" strokeDasharray="2 3" />
-                <circle cx="50" cy="50" r="40" stroke="var(--indigo)" strokeWidth="1.4" />
-                {Array.from({ length: 16 }).map((_, i) => (
-                  <circle
-                    key={i}
-                    cx={50 + 44 * Math.cos((i * Math.PI) / 8)}
-                    cy={50 + 44 * Math.sin((i * Math.PI) / 8)}
-                    r="1"
-                    fill="var(--ink)"
-                  />
-                ))}
+                <circle cx="50" cy="50" r="48" stroke="var(--ink)" strokeWidth="1.5" />
               </svg>
 
-              {/* Photo image */}
-              <div className="w-full h-full rounded-full overflow-hidden p-3.5 sm:p-4 select-none shadow-lg shadow-ink/5">
+              {/* Photo & Rotating Mandala Container */}
+              <div className="w-full h-full rounded-full overflow-hidden p-3.5 sm:p-4 select-none shadow-xl shadow-ink/5 relative bg-[#F8F4EA]">
+                {/* 1. Rotating Golden Lotus Mandala behind the head */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+                  style={{ transform: 'translate(0, -6%)' }}
+                >
+                  <div className="w-[88%] h-[88%]">
+                    <GoldenHaloMandala className="w-full h-full" speedClass="spin-halo" />
+                  </div>
+                </div>
+
+                {/* 2. Isolated Person in the foreground */}
                 <img
-                  src={PROFILE.about.photo}
+                  src="/santanu-cutout.png"
                   alt="Santanu Dubey"
-                  className="w-full h-full object-cover rounded-full object-[center_26%] transition-transform duration-700 hover:scale-105"
+                  className="relative z-10 w-full h-full object-cover rounded-full object-[center_18%] transition-transform duration-700 hover:scale-105 drop-shadow-sm"
                 />
               </div>
 
