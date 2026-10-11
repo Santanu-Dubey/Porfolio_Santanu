@@ -26,8 +26,8 @@ export function About() {
         {/* Content Flow (No cards, no boxes) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Round Mandala Photo Slot */}
-          <div className="lg:col-span-5 flex flex-col items-center">
-            <Reveal delay={0.2} className="relative w-56 h-56 sm:w-72 sm:h-72">
+          <div className="lg:col-span-5 flex flex-col items-center lg:sticky lg:top-24">
+            <Reveal delay={0.2} className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[390px] lg:h-[390px] xl:w-[420px] xl:h-[420px]">
               {/* Radial mandala border rings */}
               <svg
                 className="absolute inset-0 w-full h-full stroke-pen pointer-events-none z-10 spin-slow"
@@ -48,17 +48,17 @@ export function About() {
                 ))}
               </svg>
 
-              {/* Photo placeholder image */}
-              <div className="w-full h-full rounded-full overflow-hidden p-3 select-none">
+              {/* Photo image */}
+              <div className="w-full h-full rounded-full overflow-hidden p-3.5 sm:p-4 select-none shadow-lg shadow-ink/5">
                 <img
                   src={PROFILE.about.photo}
                   alt="Santanu Dubey"
-                  className="w-full h-full object-cover rounded-full object-[center_28%] transition-transform duration-700 hover:scale-105"
+                  className="w-full h-full object-cover rounded-full object-[center_26%] transition-transform duration-700 hover:scale-105"
                 />
               </div>
 
-              <div className="text-center mt-4">
-                <span className="font-mono text-xs text-ink-muted/80 uppercase tracking-widest">
+              <div className="text-center mt-5">
+                <span className="font-mono text-xs sm:text-sm text-ink-muted/80 uppercase tracking-widest font-medium">
                   Jaipur / Kolkata • India
                 </span>
               </div>
