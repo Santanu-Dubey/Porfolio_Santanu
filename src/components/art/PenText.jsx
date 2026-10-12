@@ -11,55 +11,44 @@ export function PenText({
   stagger = 0.025,
   as: Component = 'span',
 }) {
-  const letters = Array.from(text);
-
-  const containerVariants = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: stagger,
-        delayChildren: delay,
-      },
-    },
-  };
-
-  const letterVariants = {
-    hidden: {
-      opacity: 0,
-      y: 6,
-      filter: 'blur(4px)',
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        duration: 0.45,
-        ease: [0.16, 1, 0.3, 1],
-      },
-    },
-  };
+  // Flatten characters with a global index while grouping by words to prevent mid-word line breaks
+  const words = text.split(' ');
+  let charCounter = 0;
 
   return (
     <Component className={`inline-block ${className}`}>
-      <motion.span
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="inline"
-      >
-        {letters.map((char, index) => (
-          <motion.span
-            key={`${char}-${index}`}
-            variants={letterVariants}
-            className="inline-block"
-            style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}
-          >
-            {char}
-          </motion.span>
-        ))}
-      </motion.span>
+      <span className="inline">
+        {words.map((word, wIdx) => {
+          const wordChars = Array.from(word);
+          return (
+            <React.Fragment key={wIdx}>
+              <span className="inline-block whitespace-nowrap">
+                {wordChars.map((char) => {
+                  const currentIndex = charCounter++;
+                  return (
+                    <motion.span
+                      key={currentIndex}
+                      initial={{ opacity: 0, y: 6, filter: 'blur(4px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      transition={{
+                        duration: 0.45,
+                        delay: delay + currentIndex * stagger,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className="inline-block"
+                    >
+                      {char}
+                    </motion.span>
+                  );
+                })}
+              </span>
+              {wIdx < words.length - 1 && (
+                <span className="inline-block whitespace-pre"> </span>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </span>
     </Component>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BallPool } from '../engines/balls/BallPool';
 import { SKILL_GROUPS } from '../data/skills';
+import { GROUP_PALETTES } from '../engines/balls/techSvgIcons';
 import { Reveal } from '../components/ui/Reveal';
 
 export function Skills() {
@@ -18,18 +19,20 @@ export function Skills() {
             The Skills Ball Pool
           </h2>
           <p className="font-sans text-base sm:text-lg text-ink-muted max-w-[65ch] mx-auto leading-relaxed">
-            A 2D physics ecosystem of 36 pen-drawn mandala medallions. Distinguish domains through petal geometry:
+            An interactive 2D physics pool of 36 technology medallions. Drag, scatter, and explore Santanu's stack:
           </p>
         </Reveal>
 
-        {/* Petal geometry guide: clean, box-free inline markers */}
+        {/* Domain category indicators */}
         <Reveal delay={0.2}>
           <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2.5 mt-6 text-xs font-mono text-ink-muted select-none">
             {Object.entries(SKILL_GROUPS).map(([key, group]) => (
-              <span key={key} className="inline-flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full border border-ink/60" />
-                <span className="text-ink font-semibold">{group.name}:</span>
-                <span className="italic text-ink-muted/80">{group.pattern}</span>
+              <span key={key} className="inline-flex items-center gap-2">
+                <span
+                  className="w-2.5 h-2.5 rounded-full shadow-sm"
+                  style={{ backgroundColor: GROUP_PALETTES[key]?.border || '#1D1912' }}
+                />
+                <span className="text-ink font-medium">{group.name}</span>
               </span>
             ))}
           </div>

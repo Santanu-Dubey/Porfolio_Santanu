@@ -52,7 +52,7 @@ export function Mandala({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={`${spin ? (reverse ? 'spin-reverse-slow' : 'spin-slow') : ''} ${className}`}
-      style={{ opacity, ...style }}
+      style={{ transformOrigin: 'center', opacity, ...style }}
       aria-hidden="true"
     >
       <defs>

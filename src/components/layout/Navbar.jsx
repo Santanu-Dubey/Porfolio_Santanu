@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { Menu, X, Sun, Moon, Palette } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
+import { Menu, X, Palette } from 'lucide-react';
 
 const NAV_ITEMS = [
   { label: 'Home', href: '#home' },
@@ -60,25 +61,8 @@ export function Navbar() {
       aria-label="Main Navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
-        {/* Brand signature */}
-        <a
-          href="#home"
-          onClick={(e) => handleNavClick(e, '#home')}
-          className="font-serif text-lg sm:text-xl font-bold tracking-tight text-ink flex items-center gap-2 group"
-          aria-label="Santanu Dubey Home"
-        >
-          {/* Mini mandala logo mark */}
-          <svg
-            className="w-6 h-6 stroke-pen transition-transform duration-500 group-hover:rotate-180"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle cx="12" cy="12" r="10" strokeWidth="1.5" />
-            <circle cx="12" cy="12" r="4" strokeWidth="1" strokeDasharray="1 2" />
-            <path d="M12 2 V22 M2 12 H22" strokeWidth="0.8" />
-          </svg>
-          <span className="font-serif tracking-normal">Santanu.</span>
-        </a>
+        {/* Brand signature with crazy interactive animation */}
+        <BrandLogo onClick={(e) => handleNavClick(e, '#home')} />
 
         {/* Desktop Navigation Links */}
         <div className="hidden lg:flex items-center gap-6 xl:gap-8">

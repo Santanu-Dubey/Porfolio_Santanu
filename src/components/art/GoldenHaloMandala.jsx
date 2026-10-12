@@ -29,6 +29,7 @@ export function GoldenHaloMandala({
     <svg
       viewBox="0 0 400 400"
       className={`${speedClass} ${className}`}
+      style={{ transformOrigin: 'center' }}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"

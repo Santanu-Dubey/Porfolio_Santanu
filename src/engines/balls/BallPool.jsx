@@ -1,14 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Matter from 'matter-js';
 import { SKILLS, SKILL_GROUPS } from '../../data/skills';
 import { BallPoolPhysics } from './physics';
 import { useMotion } from '../../context/MotionContext';
 import { useTheme } from '../../context/ThemeContext';
 import { distance } from '../../utils/math';
+import {
+  GROUP_PALETTES,
+  SKILL_SHORT_NAMES,
+  createTechIconImage,
+} from './techSvgIcons';
 
 export function BallPool() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const physicsRef = useRef(null);
+  const iconImagesRef = useRef(new Map());
   const { pointerRef, registerBurstListener, reducedMotion, isTouch } = useMotion();
   const { isIndigoGreen } = useTheme();
 
@@ -67,115 +74,113 @@ export function BallPool() {
       }
     });
 
-    // Draw individual ball medallion
+    // Cache / retrieve tech icon image
+    const getOrLoadIcon = (iconKey, strokeColor) => {
+      const cacheKey = `${iconKey}-${strokeColor}`;
+      if (!iconImagesRef.current.has(cacheKey)) {
+        const img = createTechIconImage(iconKey, strokeColor);
+        if (img) {
+          iconImagesRef.current.set(cacheKey, img);
+        }
+      }
+      return iconImagesRef.current.get(cacheKey);
+    };
+
+    // Draw individual ball medallion with Tech Logo and Tech Name
     const drawMedallion = (ctx, body, inkColor, accentColor) => {
       const { x, y } = body.position;
       const r = body.visualRadius;
       const angle = body.angle;
       const skill = body.skillData;
       const isHovered = hoveredSkill?.id === skill.id;
+      const currentR = isHovered ? r * 1.15 : r;
+
+      const palette = GROUP_PALETTES[skill.group] || {
+        bg: '#FFFDF9',
+        border: inkColor,
+        accent: accentColor,
+        text: '#1C1917',
+      };
 
       ctx.save();
       ctx.translate(x, y);
+
+      // --- SECTION 1: Outer Rotating Medallion & Rim (rotates with physics) ---
+      ctx.save();
       ctx.rotate(angle);
 
-      const currentR = isHovered ? r * 1.08 : r;
+      // Soft medallion drop shadow
+      ctx.shadowColor = isHovered ? 'rgba(29, 60, 156, 0.28)' : 'rgba(27, 23, 16, 0.10)';
+      ctx.shadowBlur = isHovered ? 14 : 6;
+      ctx.shadowOffsetY = isHovered ? 3 : 2;
 
-      // 1. Warm paper disk background (stops background lines from crossing glyph)
+      // Base Badge Background: Warm, soft, high-contrast medallion
       ctx.beginPath();
       ctx.arc(0, 0, currentR, 0, Math.PI * 2);
-      ctx.fillStyle = 'var(--paper)';
+      ctx.fillStyle = isHovered ? '#FFFFFF' : palette.bg;
       ctx.fill();
 
-      // 2. Thick Outer Border
+      // Reset shadow for internal linework
+      ctx.shadowColor = 'transparent';
+
+      // Outer Medallion Border
       ctx.beginPath();
-      ctx.arc(0, 0, currentR, 0, Math.PI * 2);
-      ctx.strokeStyle = isHovered ? accentColor : inkColor;
-      ctx.lineWidth = isHovered ? 2.5 : 2.0;
+      ctx.arc(0, 0, currentR - 0.75, 0, Math.PI * 2);
+      ctx.strokeStyle = isHovered ? palette.accent : palette.border;
+      ctx.lineWidth = isHovered ? 2.6 : 1.8;
       ctx.stroke();
 
-      // 3. Dot Ring
-      const dotCount = Math.floor(currentR * 0.4);
-      const dotRadius = currentR * 0.85;
-      ctx.fillStyle = inkColor;
-      for (let i = 0; i < dotCount; i++) {
-        const da = (i * Math.PI * 2) / dotCount;
+      // Inner Delicate Concentric Dashed Ring
+      ctx.beginPath();
+      ctx.arc(0, 0, currentR * 0.88, 0, Math.PI * 2);
+      ctx.strokeStyle = isHovered ? `${palette.accent}66` : `${palette.border}33`;
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([2, 2.5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Subtle Outer Rim Notches / Petal Motifs
+      const notchCount = 12;
+      const notchR = currentR * 0.94;
+      ctx.fillStyle = isHovered ? palette.accent : `${palette.border}55`;
+      for (let i = 0; i < notchCount; i++) {
+        const na = (i * Math.PI * 2) / notchCount;
         ctx.beginPath();
-        ctx.arc(dotRadius * Math.cos(da), dotRadius * Math.sin(da), 0.9, 0, Math.PI * 2);
+        ctx.arc(notchR * Math.cos(na), notchR * Math.sin(na), 0.75, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // 4. Petal Pattern Group Ring
-      ctx.strokeStyle = isHovered ? accentColor : inkColor;
-      ctx.lineWidth = 1.0;
-      const petalCount = 8;
-      const petalR = currentR * 0.68;
+      ctx.restore(); // End rotating outer rim
 
-      for (let i = 0; i < petalCount; i++) {
-        const pa = (i * Math.PI * 2) / petalCount;
-        ctx.save();
-        ctx.rotate(pa);
+      // --- SECTION 2: Upright Tech Logo & Name (Always readable & upright!) ---
+      const strokeColor = isHovered ? palette.accent : palette.border;
+      const iconImg = getOrLoadIcon(skill.iconKey, strokeColor);
+      const hasIcon = iconImg && iconImg.complete && iconImg.naturalWidth > 0;
 
-        ctx.beginPath();
-        if (skill.pattern === 'pointed') {
-          // Pointed petals (Languages)
-          ctx.moveTo(0, -petalR);
-          ctx.lineTo(currentR * 0.15, -petalR * 0.7);
-          ctx.lineTo(-currentR * 0.15, -petalR * 0.7);
-          ctx.closePath();
-          ctx.stroke();
-        } else if (skill.pattern === 'lotus') {
-          // Lotus petals (Frontend)
-          ctx.arc(0, -petalR * 0.75, currentR * 0.15, 0, Math.PI, true);
-          ctx.stroke();
-        } else if (skill.pattern === 'arches') {
-          // Arches (Backend)
-          ctx.arc(0, -petalR * 0.8, currentR * 0.12, 0, Math.PI, true);
-          ctx.stroke();
-        } else if (skill.pattern === 'teardrops') {
-          // Teardrops (Databases)
-          ctx.moveTo(0, -petalR);
-          ctx.bezierCurveTo(3, -petalR * 0.85, 3, -petalR * 0.7, 0, -petalR * 0.65);
-          ctx.bezierCurveTo(-3, -petalR * 0.7, -3, -petalR * 0.85, 0, -petalR);
-          ctx.stroke();
-        } else if (skill.pattern === 'spirals') {
-          // Spirals (AI/ML)
-          ctx.arc(0, -petalR * 0.75, currentR * 0.12, 0, Math.PI * 1.5);
-          ctx.stroke();
-        } else if (skill.pattern === 'shield') {
-          // Shield petals (Cybersecurity)
-          ctx.moveTo(0, -petalR);
-          ctx.lineTo(currentR * 0.12, -petalR * 0.8);
-          ctx.lineTo(0, -petalR * 0.65);
-          ctx.lineTo(-currentR * 0.12, -petalR * 0.8);
-          ctx.closePath();
-          ctx.stroke();
-        } else {
-          // Diamonds & dots (Tools)
-          ctx.moveTo(0, -petalR);
-          ctx.lineTo(3, -petalR * 0.82);
-          ctx.lineTo(0, -petalR * 0.65);
-          ctx.lineTo(-3, -petalR * 0.82);
-          ctx.closePath();
-          ctx.stroke();
-        }
-        ctx.restore();
+      const displayName = SKILL_SHORT_NAMES[skill.id] || skill.name;
+
+      if (hasIcon) {
+        // Draw Tech Icon in upper-center
+        const iconSize = Math.max(20, Math.min(32, Math.floor(currentR * 0.62)));
+        const iconY = -currentR * 0.16;
+        ctx.drawImage(iconImg, -iconSize / 2, iconY - iconSize / 2, iconSize, iconSize);
+
+        // Draw Tech Name in lower portion
+        const fontSize = Math.max(9, Math.min(12, Math.floor(currentR * 0.28)));
+        ctx.fillStyle = isHovered ? palette.accent : palette.text;
+        ctx.font = `700 ${fontSize}px system-ui, -apple-system, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(displayName, 0, currentR * 0.42);
+      } else {
+        // Clean, prominent centered text
+        const fontSize = Math.max(11, Math.min(15, Math.floor(currentR * 0.38)));
+        ctx.fillStyle = isHovered ? palette.accent : palette.text;
+        ctx.font = `700 ${fontSize}px system-ui, -apple-system, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(displayName, 0, 0);
       }
-
-      // 5. Center Core Circle
-      ctx.beginPath();
-      ctx.arc(0, 0, currentR * 0.44, 0, Math.PI * 2);
-      ctx.strokeStyle = inkColor;
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      // 6. Glyph Abbreviation / Mark
-      ctx.fillStyle = isHovered ? accentColor : inkColor;
-      ctx.font = `600 ${Math.max(10, Math.floor(currentR * 0.3))}px monospace`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      const labelShort = skill.name.slice(0, 3).toUpperCase();
-      ctx.fillText(labelShort, 0, 1);
 
       ctx.restore();
     };
@@ -279,6 +284,24 @@ export function BallPool() {
       ref={containerRef}
       className="relative w-full flex flex-col items-center justify-center select-none"
     >
+      {/* Floating active skill badge */}
+      {hoveredSkill && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 pointer-events-none px-4 py-1.5 rounded-full bg-paper/95 backdrop-blur-md border border-ink/20 shadow-md shadow-ink/5 flex items-center gap-2 z-20 animate-in fade-in duration-150">
+          <span
+            className="w-2.5 h-2.5 rounded-full"
+            style={{
+              backgroundColor: GROUP_PALETTES[hoveredSkill.group]?.border || 'var(--indigo)',
+            }}
+          />
+          <span className="font-serif font-bold text-ink text-sm sm:text-base">
+            {hoveredSkill.name}
+          </span>
+          <span className="font-mono text-xs uppercase tracking-wider text-ink-muted">
+            • {SKILL_GROUPS[hoveredSkill.group]?.name}
+          </span>
+        </div>
+      )}
+
       <canvas
         ref={canvasRef}
         onPointerDown={handlePointerDown}

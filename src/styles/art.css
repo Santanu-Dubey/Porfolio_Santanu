@@ -89,14 +89,17 @@
 
 .spin-slow {
   animation: spinSlow 90s linear infinite;
+  transform-origin: center;
 }
 
 .spin-halo {
   animation: spinSlow 45s linear infinite;
+  transform-origin: center;
 }
 
 .spin-reverse-slow {
   animation: spinSlow 120s linear infinite reverse;
+  transform-origin: center;
 }
 
 /* Pen-drawn wobbly hand border for buttons & medallions */

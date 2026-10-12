@@ -29,7 +29,7 @@ export function Hero() {
         <Mandala size={640} color="var(--ink)" spin={true} />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+      <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
         {/* Sub-line */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -41,8 +41,8 @@ export function Hero() {
           {PROFILE.subline}
         </motion.div>
 
-        {/* Main Heading */}
-        <h1 className="font-serif text-[clamp(2.5rem,7vw,5.5rem)] font-bold tracking-tight text-ink mb-4 leading-[1.08] text-balance ink-text-glow">
+        {/* Main Heading - Guaranteed single line on sm+ screens */}
+        <h1 className="font-serif text-[clamp(1.85rem,5.2vw,4.25rem)] font-bold tracking-tight text-ink mb-4 leading-[1.12] sm:whitespace-nowrap ink-text-glow">
           <PenText text="Hi, I'm Santanu Dubey 👋" delay={0.4} />
         </h1>
 
